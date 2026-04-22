@@ -775,7 +775,7 @@
 
       <div class="section-header">
         <div class="section-title">Kendaraan</div>
-        <button class="btn-sm btn-sm-blue" onclick="showPage('tambah')" style="border-radius:8px">
+        <button class="btn-sm btn-sm-blue" onclick="openAddModal()" style="border-radius:8px">
           <i data-lucide="plus" size="13"></i> Tambah
         </button>
       </div>
@@ -979,7 +979,7 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span>Maps</span>
     </button>
-    <button class="nav-item nav-add" id="nav-tambah" onclick="showPage('tambah')">
+    <button class="nav-item nav-add" id="nav-tambah" onclick="openAddModal()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <span>Tambah</span>
     </button>
@@ -992,6 +992,72 @@
       <span>Setelan</span>
     </button>
   </nav>
+
+  <!-- Modal Tambah / Edit Kendaraan -->
+  <div class="modal-overlay" id="addVehicleModal" onclick="handleModalOverlayClick(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Tambah Kendaraan</div>
+        <button class="modal-close" id="btnModalClose" onclick="closeAddModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modal-editId">
+
+        <div class="form-group">
+          <label class="form-label">Nama Kendaraan</label>
+          <input class="form-input" id="modal-nama" type="text" placeholder="Contoh: Honda Beat 2022">
+          <div class="error-msg" id="err-modal-nama"></div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Nomor Plat</label>
+            <input class="form-input" id="modal-plat" type="text" placeholder="AB 1234 CD" style="text-transform:uppercase">
+            <div class="error-msg" id="err-modal-plat"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Warna</label>
+            <input class="form-input" id="modal-warna" type="text" placeholder="Contoh: Merah">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Status Sewa</label>
+            <select class="form-select" id="modal-status">
+              <option value="tersedia">Tidak Disewa</option>
+              <option value="disewa">Disewa</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Status GPS</label>
+            <select class="form-select" id="modal-gps">
+              <option value="aktif">Aktif</option>
+              <option value="offline">Offline</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Jenis Kendaraan</label>
+          <select class="form-select" id="modal-jenis">
+            <option value="motor">Motor</option>
+            <option value="mobil">Mobil</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="btnModalSimpan" onclick="saveVehicleModal()" style="margin-top:8px">
+          Simpan Kendaraan
+        </button>
+        <button onclick="closeAddModal()" style="width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--text-2);font-size:14px;cursor:pointer;font-weight:600">
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1196,7 +1262,7 @@ function renderVehicles(filter='') {
         <button class="btn-sm btn-sm-blue" onclick="event.stopPropagation();viewOnMap(${v.id})">
           <i data-lucide="map-pin" size="11"></i> Maps
         </button>
-        <button class="btn-sm btn-sm-green" onclick="event.stopPropagation();editVehicle(${v.id})">
+        <button class="btn-sm btn-sm-green" onclick="event.stopPropagation();openEditModal(${v.id})">
           <i data-lucide="edit-2" size="11"></i> Edit
         </button>
       </div>
@@ -1315,19 +1381,7 @@ function confirmDelete() {
   showToast('🗑 Kendaraan dihapus');
 }
 
-function editVehicle(id) {
-  const v = getVehicles().find(x=>x.id===id);
-  if (!v) return;
-  document.getElementById('editId').value = v.id;
-  document.getElementById('v-nama').value = v.nama;
-  document.getElementById('v-plat').value = v.plat;
-  document.getElementById('v-jenis').value = v.jenis;
-  document.getElementById('v-status').value = v.status;
-  document.getElementById('v-warna').value = v.warna||'';
-  document.getElementById('tambahTitle').textContent = 'Edit Kendaraan';
-  document.getElementById('btnSimpan').textContent = 'Perbarui Kendaraan';
-  showPage('tambah');
-}
+function editVehicle(id) { openEditModal(id); }
 
 function showDetail(id) {
   const v = getVehicles().find(x=>x.id===id);
@@ -1382,7 +1436,7 @@ function showDetail(id) {
       </button>
     </div>
     <div class="detail-actions">
-      <button class="btn-action btn-action-outline" onclick="editVehicle(${v.id})">
+      <button class="btn-action btn-action-outline" onclick="openEditModal(${v.id})">
         <i data-lucide="edit-2" size="16"></i> Edit Data
       </button>
       <button class="btn-action btn-action-red" onclick="confirmDeleteVehicle(${v.id})">
@@ -1638,6 +1692,88 @@ function checkOffline() {
 }
 window.addEventListener('online', ()=>{ document.getElementById('offlineBanner').classList.remove('show'); showToast('🌐 Koneksi kembali aktif'); });
 window.addEventListener('offline', ()=>{ document.getElementById('offlineBanner').classList.add('show'); showToast('📡 Mode offline aktif', true); });
+
+// ─── Add/Edit Modal ───────────────────────────────────────
+function openAddModal() {
+  document.getElementById('modal-editId').value = '';
+  document.getElementById('modal-nama').value = '';
+  document.getElementById('modal-plat').value = '';
+  document.getElementById('modal-warna').value = '';
+  document.getElementById('modal-status').value = 'tersedia';
+  document.getElementById('modal-gps').value = 'aktif';
+  document.getElementById('modal-jenis').value = 'motor';
+  clearErrors('err-modal-nama','err-modal-plat');
+  document.getElementById('modalTitle').textContent = 'Tambah Kendaraan';
+  document.getElementById('btnModalSimpan').textContent = 'Simpan Kendaraan';
+  document.getElementById('addVehicleModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const v = getVehicles().find(x => x.id === id);
+  if (!v) return;
+  document.getElementById('modal-editId').value = v.id;
+  document.getElementById('modal-nama').value = v.nama;
+  document.getElementById('modal-plat').value = v.plat;
+  document.getElementById('modal-warna').value = v.warna || '';
+  document.getElementById('modal-status').value = v.status;
+  document.getElementById('modal-gps').value = v.gpsStatus || 'aktif';
+  document.getElementById('modal-jenis').value = v.jenis || 'motor';
+  clearErrors('err-modal-nama','err-modal-plat');
+  document.getElementById('modalTitle').textContent = 'Edit Kendaraan';
+  document.getElementById('btnModalSimpan').textContent = 'Perbarui Kendaraan';
+  document.getElementById('addVehicleModal').classList.add('open');
+}
+
+function closeAddModal() {
+  document.getElementById('addVehicleModal').classList.remove('open');
+}
+
+function handleModalOverlayClick(e) {
+  if (e.target === document.getElementById('addVehicleModal')) closeAddModal();
+}
+
+function saveVehicleModal() {
+  const editId    = document.getElementById('modal-editId').value;
+  const nama      = document.getElementById('modal-nama').value.trim();
+  const plat      = document.getElementById('modal-plat').value.trim().toUpperCase();
+  const warna     = document.getElementById('modal-warna').value.trim();
+  const status    = document.getElementById('modal-status').value;
+  const gpsStatus = document.getElementById('modal-gps').value;
+  const jenis     = document.getElementById('modal-jenis').value;
+
+  clearErrors('err-modal-nama','err-modal-plat');
+  let ok = true;
+  if (!nama) { setError('err-modal-nama','Nama kendaraan tidak boleh kosong'); ok=false; }
+  if (!plat) { setError('err-modal-plat','Nomor plat tidak boleh kosong'); ok=false; }
+  if (!ok) return;
+
+  const vehicles = getVehicles();
+  if (editId) {
+    const idx = vehicles.findIndex(v => v.id == editId);
+    if (idx > -1) Object.assign(vehicles[idx], { nama, plat, warna, status, gpsStatus, jenis });
+    showToast('✅ Kendaraan berhasil diperbarui');
+  } else {
+    if (vehicles.find(v => v.plat === plat)) { setError('err-modal-plat','Nomor plat sudah terdaftar'); return; }
+    const newV = {
+      id: Date.now(), nama, plat, jenis, status, warna, gpsStatus,
+      lat: -7.5562 + (Math.random()-.5)*.05,
+      lng: 110.8316 + (Math.random()-.5)*.05,
+      lastUpdate: new Date().toISOString()
+    };
+    vehicles.push(newV);
+    addNotification('success','🚗','Kendaraan Ditambahkan',`${nama} (${plat}) berhasil ditambahkan`,'Baru saja');
+    showToast('🚗 Kendaraan berhasil ditambahkan!');
+  }
+  saveVehicles(vehicles);
+  closeAddModal();
+  renderVehicles();
+  updateDashboard();
+  updateMapMarkers();
+  if (!document.getElementById('page-home').classList.contains('active')) showPage('home');
+}
+
+// updateDashboard — fungsi resmi (alias updateStats)
+function updateDashboard() { updateStats(); }
 
 // ─── Init ─────────────────────────────────────────────────
 checkSession();
