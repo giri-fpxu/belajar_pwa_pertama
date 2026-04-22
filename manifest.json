@@ -8,6 +8,7 @@
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
+    "tabbed",
     "standalone"
   ],
   "background_color": "#F3F4F6",
@@ -51,6 +52,41 @@
       "url": "./index.html?id=%s"
     }
   ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "widgets": [
+    {
+      "name": "RenTrack Status",
+      "description": "Lihat status kendaraan rental",
+      "tag": "rentrack-widget",
+      "ms_ac_template": "widget/template.json",
+      "data": "widget/data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "icons/ss-narrow1.png",
+          "sizes": "1080x1920",
+          "label": "Widget status kendaraan"
+        }
+      ],
+      "icons": [
+        {
+          "src": "icons/app-icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "./index.html?action=new-note"
+  },
   "edge_side_panel": {
     "preferred_width": 400
   },
