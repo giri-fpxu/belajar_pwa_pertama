@@ -21,9 +21,39 @@
     "business"
   ],
   "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
-  "related_applications": [],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://gilangangga04.github.io/belajar_pwa_pertama/manifest.json"
+    }
+  ],
   "prefer_related_applications": false,
   "handle_links": "preferred",
+  "scope_extensions": [
+    {
+      "origin": "https://gilangangga04.github.io"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+rentrack",
+      "url": "./index.html?id=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
     {
       "src": "icons/icon-192.png",
