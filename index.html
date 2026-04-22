@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="RenTrack">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192x192-A.png">
 <title>RenTrack - Vehicle Tracking</title>
 
 <!-- Leaflet Maps -->
@@ -1633,49 +1635,14 @@ checkSession();
 lucide.createIcons();
 </script>
 
-<!-- PWA Service Worker + Manifest inline -->
+<!-- PWA Service Worker Registration -->
 <script>
-const manifest = {
-  name: "RenTrack - Vehicle Monitoring",
-  short_name: "RenTrack",
-  description: "Sistem monitoring kendaraan rental real-time",
-  start_url: "/",
-  display: "standalone",
-  background_color: "#F3F4F6",
-  theme_color: "#2563EB",
-  orientation: "portrait",
-  icons: [
-    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%232563EB'/%3E%3Ccircle cx='96' cy='96' r='28' fill='white'/%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" },
-    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%232563EB'/%3E%3Ccircle cx='256' cy='256' r='72' fill='white'/%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml" }
-  ]
-};
-
-const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-const link = document.createElement('link');
-link.rel = 'manifest';
-link.href = URL.createObjectURL(blob);
-document.head.appendChild(link);
-
-const sw = `
-const CACHE = 'rentrack-v1';
-const ASSETS = ['/'];
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
-  self.skipWaiting();
-});
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
-  self.clients.claim();
-});
-self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(()=>new Response('<h1>Offline</h1>',{headers:{'Content-Type':'text/html'}}))));
-});
-`;
-
 if ('serviceWorker' in navigator) {
-  const swBlob = new Blob([sw], {type:'text/javascript'});
-  const swUrl = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl).catch(()=>{});
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.error('SW registration failed:', err));
+  });
 }
 </script>
 </body>
