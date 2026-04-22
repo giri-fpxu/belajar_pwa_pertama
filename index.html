@@ -1144,12 +1144,13 @@ function getHistory() { return JSON.parse(localStorage.getItem('rt_history')||'[
 function saveHistory(h) { localStorage.setItem('rt_history', JSON.stringify(h)); }
 
 function seedDemoData() {
-  // Hapus data demo lama jika masih ada (one-time cleanup)
-  if (!localStorage.getItem('rt_cleaned')) {
+  // Bersihkan data demo lama — versi flag agar selalu jalan saat update
+  const CLEAN_VERSION = 'v2';
+  if (localStorage.getItem('rt_cleaned') !== CLEAN_VERSION) {
     localStorage.removeItem('rt_vehicles');
     localStorage.removeItem('rt_history');
     localStorage.removeItem('rt_notifs');
-    localStorage.setItem('rt_cleaned', '1');
+    localStorage.setItem('rt_cleaned', CLEAN_VERSION);
   }
 }
 
@@ -1205,9 +1206,15 @@ function renderVehicles(filter='') {
 
 function updateStats() {
   const v = getVehicles();
-  document.getElementById('stat-total').textContent = v.length;
-  document.getElementById('stat-aktif').textContent = v.filter(x=>x.status==='disewa').length;
-  document.getElementById('stat-offline').textContent = v.filter(x=>x.gpsStatus==='offline').length;
+  const total = v.length;
+  const disewa = v.filter(x=>x.status==='disewa').length;
+  const offline = v.filter(x=>x.gpsStatus==='offline').length;
+
+  // Animate stat if value changed
+  animateStat('stat-total', total);
+  animateStat('stat-aktif', disewa);
+  animateStat('stat-offline', offline);
+
   const offlines = v.filter(x=>x.gpsStatus==='offline');
   const banner = document.getElementById('alertBanner');
   const alertText = document.getElementById('alertText');
@@ -1220,6 +1227,22 @@ function updateStats() {
   }
   const notifDot = document.getElementById('notifDot');
   notifDot.style.display = getNotifications().length ? 'block' : 'none';
+}
+
+function animateStat(id, newVal) {
+  const el = document.getElementById(id);
+  const oldVal = parseInt(el.textContent) || 0;
+  el.textContent = newVal;
+  if (newVal !== oldVal) {
+    const card = el.closest('.stat-card');
+    card.style.transition = 'transform .2s, box-shadow .2s';
+    card.style.transform = 'scale(1.08)';
+    card.style.boxShadow = '0 4px 20px rgba(37,99,235,.2)';
+    setTimeout(() => {
+      card.style.transform = 'scale(1)';
+      card.style.boxShadow = '';
+    }, 300);
+  }
 }
 
 function saveVehicle() {
