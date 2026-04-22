@@ -1,4 +1,4 @@
-const CACHE_NAME = "rentrack-v3";
+const CACHE_NAME = "rentrack-v4";
 const BASE_URL = self.registration.scope;
 
 const urlsToCache = [
@@ -7,8 +7,8 @@ const urlsToCache = [
   `${BASE_URL}offline.html`,
   `${BASE_URL}manifest.json`,
   `${BASE_URL}assets/style.css`,
-  `${BASE_URL}icons/icon-192x192-A.png`,
-  `${BASE_URL}icons/icon-512x512-B.png`,
+  `${BASE_URL}icons/icon-192.png`,
+  `${BASE_URL}icons/icon-512.png`,
 ];
 
 // Install Service Worker & cache assets
@@ -55,7 +55,6 @@ self.addEventListener("fetch", event => {
         if (response) return response;
         return fetch(request)
           .then(networkResponse => {
-            // Cache successful responses
             if (networkResponse && networkResponse.status === 200) {
               const clone = networkResponse.clone();
               caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
@@ -63,7 +62,6 @@ self.addEventListener("fetch", event => {
             return networkResponse;
           })
           .catch(() => {
-            // Return offline page for navigation requests
             if (request.mode === "navigate") {
               return caches.match(`${BASE_URL}offline.html`);
             }

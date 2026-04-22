@@ -20,27 +20,31 @@
     "utilities",
     "business"
   ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "handle_links": "preferred",
   "icons": [
     {
-      "src": "icons/icon-192x192-A.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512-B.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-192x192-A.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icons/icon-512x512-B.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -48,18 +52,25 @@
   ],
   "screenshots": [
     {
-      "src": "icons/screenshot1.png",
+      "src": "icons/screenshot-narrow1.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Tampilan dashboard utama RenTrack"
     },
     {
-      "src": "icons/screenshot2.png",
+      "src": "icons/screenshot-narrow2.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Peta pelacakan kendaraan real-time"
+    },
+    {
+      "src": "icons/screenshot-wide1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan desktop RenTrack"
     }
   ],
   "shortcuts": [
@@ -70,12 +81,11 @@
       "description": "Buka dashboard utama",
       "icons": [
         {
-          "src": "icons/icon-192x192-A.png",
-          "sizes": "192x192"
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
         }
       ]
     }
-  ],
-  "prefer_related_applications": false,
-  "handle_links": "preferred"
+  ]
 }
