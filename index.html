@@ -1144,28 +1144,13 @@ function getHistory() { return JSON.parse(localStorage.getItem('rt_history')||'[
 function saveHistory(h) { localStorage.setItem('rt_history', JSON.stringify(h)); }
 
 function seedDemoData() {
-  if (getVehicles().length) return;
-  const vehicles = [
-    { id: 1001, nama: 'Honda Beat 2022', plat: 'AB 1234 XY', jenis: 'motor', status: 'disewa', gpsStatus: 'aktif', warna: 'Merah', lat: -7.5562, lng: 110.8316, lastUpdate: new Date().toISOString() },
-    { id: 1002, nama: 'Yamaha NMAX 2023', plat: 'AB 5678 CD', jenis: 'motor', status: 'tersedia', gpsStatus: 'aktif', warna: 'Putih', lat: -7.5489, lng: 110.8445, lastUpdate: new Date().toISOString() },
-    { id: 1003, nama: 'Toyota Avanza 2021', plat: 'AB 9900 EF', jenis: 'mobil', status: 'disewa', gpsStatus: 'aktif', warna: 'Silver', lat: -7.5601, lng: 110.8271, lastUpdate: new Date().toISOString() },
-    { id: 1004, nama: 'Honda Vario 2022', plat: 'AB 2233 GH', jenis: 'motor', status: 'tersedia', gpsStatus: 'offline', warna: 'Hitam', lat: -7.5534, lng: 110.8399, lastUpdate: new Date(Date.now()-3600000).toISOString() },
-    { id: 1005, nama: 'Suzuki Ertiga 2020', plat: 'AB 4455 IJ', jenis: 'mobil', status: 'tersedia', gpsStatus: 'aktif', warna: 'Putih', lat: -7.5618, lng: 110.8356, lastUpdate: new Date().toISOString() },
-  ];
-  saveVehicles(vehicles);
-  const history = [
-    { id: 1, vehicleId: 1001, vehicleName: 'Honda Beat 2022', plat: 'AB 1234 XY', startTime: '2024-01-15 08:00', endTime: '2024-01-15 17:00', durasi: '9 jam', rute: 'Solo - Sukoharjo' },
-    { id: 2, vehicleId: 1003, vehicleName: 'Toyota Avanza 2021', plat: 'AB 9900 EF', startTime: '2024-01-14 09:00', endTime: '2024-01-14 20:00', durasi: '11 jam', rute: 'Solo - Klaten' },
-    { id: 3, vehicleId: 1002, vehicleName: 'Yamaha NMAX 2023', plat: 'AB 5678 CD', startTime: '2024-01-13 07:30', endTime: '2024-01-13 18:30', durasi: '11 jam', rute: 'Solo - Boyolali' },
-    { id: 4, vehicleId: 1005, vehicleName: 'Suzuki Ertiga 2020', plat: 'AB 4455 IJ', startTime: '2024-01-12 06:00', endTime: '2024-01-12 22:00', durasi: '16 jam', rute: 'Solo - Semarang' },
-  ];
-  saveHistory(history);
-  const notifs = [
-    { id: 1, type: 'danger', icon: '❌', title: 'GPS Tidak Aktif', desc: 'Honda Vario 2022 (AB 2233 GH) – GPS offline lebih dari 1 jam', time: '1 jam lalu' },
-    { id: 2, type: 'warning', icon: '⚠️', title: 'Kendaraan Keluar Area', desc: 'Toyota Avanza 2021 (AB 9900 EF) – keluar dari area aman', time: '2 jam lalu' },
-    { id: 3, type: 'info', icon: '📍', title: 'Update Lokasi', desc: 'Honda Beat 2022 – lokasi diperbarui', time: '5 menit lalu' },
-  ];
-  saveNotifications(notifs);
+  // Hapus data demo lama jika masih ada (one-time cleanup)
+  if (!localStorage.getItem('rt_cleaned')) {
+    localStorage.removeItem('rt_vehicles');
+    localStorage.removeItem('rt_history');
+    localStorage.removeItem('rt_notifs');
+    localStorage.setItem('rt_cleaned', '1');
+  }
 }
 
 // ─── Vehicles CRUD ────────────────────────────────────────
